@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Southern Geek's Dark Mode Toggle (AMOLED)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Light mode styles */
+        body.light {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        /* Dark mode styles */
+        body.dark {
+            background-color: #000000;
+            color: #e0e0e0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.7;
+            margin-bottom: 30px;
+        }
+
+        .toggle-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .light .toggle-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .dark .toggle-button {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            color: #333;
+        }
+
+        .toggle-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-button:active {
+            transform: translateY(0);
+        }
+
+        .icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-button:hover .icon {
+            transform: rotate(15deg);
+        }
+
+        .content {
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .light .card {
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .dark .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card h2 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .card p {
+            line-height: 1.6;
+            opacity: 0.8;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .feature {
+            text-align: left;
+            padding: 20px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .light .feature {
+            background: #f8f9fa;
+        }
+
+        .dark .feature {
+            background: #2d2d2d;
+        }
+
+        .feature h3 {
+            margin-bottom: 10px;
+            color: inherit;
+        }
+
+        .status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .light .status {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .dark .status {
+            background: #2d3748;
+            color: #cbd5e0;
+            border: 1px solid #4a5568;
+        }
+    </style>
+</head>
+<body class="light">
+    <div class="status" id="status">☀️ Light Mode</div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>Dark Mode Toggle (AMOLED)</h1>
+            <p class="subtitle">Click the button below to switch between themes</p>
+            <button class="toggle-button" id="themeToggle">
+                <span class="icon" id="toggleIcon">🌙</span>
+                <span id="toggleText">Switch to AMOLED Dark Mode</span>
+            </button>
+        </div>
+
+        <div class="content">
+            <div class="card">
+                <h2>Welcome!</h2>
+                <p>This page demonstrates a smooth transition between light and dark modes. The toggle preserves your preference and provides visual feedback during the switch.</p>
+            </div>
+
+            <div class="features">
+                <div class="feature">
+                    <h3>🎨 Smooth Transitions</h3>
+                    <p>All elements transition smoothly with CSS animations for a better UI.</p>
+                </div>
+                <div class="feature">
+                    <h3>💾 Memory Persistent</h3>
+                    <p>Your theme preference is remembered during your session.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get references to elements
+        const body = document.body;
+        const toggleButton = document.getElementById('themeToggle');
+        const toggleIcon = document.getElementById('toggleIcon');
+        const toggleText = document.getElementById('toggleText');
+        const status = document.getElementById('status');
+
+        // Track current theme
+        let isDark = false;
+
+        // Function to update theme
+        function updateTheme() {
+            if (isDark) {
+                body.className = 'dark';
+                toggleIcon.textContent = '☀️';
+                toggleText.textContent = 'Switch to Light Mode';
+                status.innerHTML = '☾ Dark Mode';
+            } else {
+                body.className = 'light';
+                toggleIcon.textContent = '☾';
+                toggleText.textContent = 'Switch to Dark Mode';
+                status.innerHTML = '☀️ Light Mode';
+            }
+        }
+
+        // Add click event listener to toggle button
+        toggleButton.addEventListener('click', function() {
+            isDark = !isDark;
+            updateTheme();
+            
+            // Add a little animation feedback
+            toggleButton.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                toggleButton.style.transform = '';
+            }, 150);
+        });
+
+        // Initialize theme
+        updateTheme();
+
+        // Optional: Add keyboard support
+        toggleButton.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleButton.click();
+            }
+        });
+    </script>
+    <footer style="text-align: center; margin-top: 50px; font-size: 0.8rem; color: #888;">
+        &copy; 2025 Southern Geek. All rights reserved.
+    <br />
+        Twitter <a href="https://x.com/southern_geek94" target="_blank"> @southern_geek94</a>
+        Github <a href="https://github.com/Southern-Geek" target="_blank"> Southern Geek</a>
+        Instagram <a href="https://www.instagram.com/southerngeek94/" target="_blank"> @southern_geek94</a>
+        YouTube <a href="https://www.youtube.com/@SouthernGeek-94/featured" target="_blank"> Southern Geek</a>
+    </footer>
+</body>
+</html>
