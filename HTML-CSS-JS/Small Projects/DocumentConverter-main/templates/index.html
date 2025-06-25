@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Format Converter</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.0/feather.min.css">
+    <style>
+        .drop-zone {
+            border: 2px dashed var(--bs-border-color);
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .drop-zone:hover,
+        .drop-zone.dragover {
+            border-color: var(--bs-primary);
+            background-color: var(--bs-primary-bg-subtle);
+        }
+        
+        .drop-zone.dragover {
+            transform: scale(1.02);
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .file-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--bs-body-bg);
+            border-radius: 8px;
+            border: 1px solid var(--bs-border-color);
+        }
+        
+        .format-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .format-option {
+            text-align: center;
+            padding: 10px;
+            border: 1px solid var(--bs-border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .format-option:hover {
+            border-color: var(--bs-primary);
+            background-color: var(--bs-primary-bg-subtle);
+        }
+        
+        .format-option.selected {
+            border-color: var(--bs-primary);
+            background-color: var(--bs-primary);
+            color: var(--bs-primary-text);
+        }
+        
+        .convert-section {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid var(--bs-border-color);
+        }
+        
+        .icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .progress-section {
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container my-5">
+        <!-- Header -->
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h1 class="display-4 mb-3">Document Format Converter</h1>
+                <p class="lead text-muted">Convert your documents between popular formats including PDF, Word, Excel, PowerPoint, and OpenDocument formats</p>
+            </div>
+        </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="row mb-4">
+                    <div class="col-12">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Main Content -->
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <form id="uploadForm" method="POST" action="{{ url_for('upload_file') }}" enctype="multipart/form-data">
+                    
+                    <!-- File Upload Section -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i data-feather="upload" class="me-2"></i>
+                                Select Document
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="drop-zone" id="dropZone">
+                                <svg class="icon text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                                </svg>
+                                <h5>Drag and drop your document here</h5>
+                                <p class="text-muted mb-3">or click to browse files</p>
+                                <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('fileInput').click()">
+                                    Choose File
+                                </button>
+                            </div>
+                            
+                            <input type="file" id="fileInput" name="file" class="file-input" multiple accept=".odt,.ods,.odp,.odg,.odf,.pdf,.doc,.docx,.rtf,.xls,.xlsx,.csv,.ppt,.pptx,.txt,.html,.htm">
+                            
+                            <div id="fileInfo" class="file-info" style="display: none;">
+                                <div class="d-flex align-items-center">
+                                    <i data-feather="file" class="me-2"></i>
+                                    <div class="flex-grow-1">
+                                        <strong id="fileName"></strong><br>
+                                        <small class="text-muted" id="fileSize"></small>
+                                    </div>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="clearFile()">
+                                        <i data-feather="x"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Format Selection Section -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i data-feather="settings" class="me-2"></i>
+                                Choose Output Format
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="format-grid">
+                                {% for format in formats %}
+                                <div class="format-option" data-format="{{ format }}" onclick="selectFormat('{{ format }}')">
+                                    <strong>{{ format.upper() }}</strong>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <input type="hidden" id="targetFormat" name="target_format" value="">
+                        </div>
+                    </div>
+
+                    <!-- Quality Settings Section -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i data-feather="sliders" class="me-2"></i>
+                                Conversion Quality
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="quality" id="qualityHigh" value="high">
+                                        <label class="form-check-label" for="qualityHigh">
+                                            <strong>High Quality</strong><br>
+                                            <small class="text-muted">Best quality, larger file size</small>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="quality" id="qualityMedium" value="medium" checked>
+                                        <label class="form-check-label" for="qualityMedium">
+                                            <strong>Medium Quality</strong><br>
+                                            <small class="text-muted">Balanced quality and size</small>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="quality" id="qualityLow" value="low">
+                                        <label class="form-check-label" for="qualityLow">
+                                            <strong>Low Quality</strong><br>
+                                            <small class="text-muted">Smaller file size, reduced quality</small>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Convert Section -->
+                    <div class="convert-section">
+                        <div class="d-grid">
+                            <button type="submit" id="convertBtn" class="btn btn-primary btn-lg" disabled>
+                                <i data-feather="refresh-cw" class="me-2"></i>
+                                Convert Document
+                            </button>
+                        </div>
+                        
+                        <div class="progress-section" id="progressSection">
+                            <div class="progress mb-3">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div>
+                            </div>
+                            <p class="text-center text-muted">Converting your document...</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Supported Formats Info -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0">
+                            <i data-feather="info" class="me-2"></i>
+                            Supported Formats
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h6>OpenDocument Formats</h6>
+                                <ul class="list-unstyled small text-muted">
+                                    <li>ODT (Text Document)</li>
+                                    <li>ODS (Spreadsheet)</li>
+                                    <li>ODP (Presentation)</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-4">
+                                <h6>Microsoft Office</h6>
+                                <ul class="list-unstyled small text-muted">
+                                    <li>DOC, DOCX (Word)</li>
+                                    <li>XLS, XLSX (Excel)</li>
+                                    <li>PPT, PPTX (PowerPoint)</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-4">
+                                <h6>Other Formats</h6>
+                                <ul class="list-unstyled small text-muted">
+                                    <li>PDF (Portable Document)</li>
+                                    <li>RTF (Rich Text Format)</li>
+                                    <li>CSV (Comma Separated)</li>
+                                    <li>TXT (Plain Text)</li>
+                                    <li>HTML (Web Format)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+    <script>
+        // Initialize Feather icons
+        feather.replace();
+    </script>
+</body>
+</html>
