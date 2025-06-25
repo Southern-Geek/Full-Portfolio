@@ -1,0 +1,41 @@
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sunsetSky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF6347;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#FF8C00;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8B008B;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="peak1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4B0082;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2F0F2F;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="peak2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#6A5ACD;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#483D8B;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="peak3" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8A2BE2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4B0082;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Sunset sky -->
+  <rect width="400" height="400" fill="url(#sunsetSky)" />
+  
+  <!-- Large sun -->
+  <circle cx="200" cy="150" r="50" fill="#FFD700" opacity="0.8" />
+  
+  <!-- Angular mountain layers -->
+  <polygon points="0,200 100,120 180,140 260,100 340,130 400,110 400,400 0,400" fill="url(#peak1)" />
+  <polygon points="0,260 80,180 160,200 240,160 320,180 400,170 400,400 0,400" fill="url(#peak2)" />
+  <polygon points="0,320 60,240 140,260 220,220 300,240 380,230 400,235 400,400 0,400" fill="url(#peak3)" />
+  
+  <!-- Geometric crystal formations -->
+  <polygon points="120,280 140,250 160,280 140,310" fill="#FF69B4" opacity="0.4" />
+  <polygon points="250,300 270,270 290,300 270,330" fill="#00CED1" opacity="0.4" />
+  <polygon points="320,320 340,290 360,320 340,350" fill="#FF1493" opacity="0.4" />
+  
+  <!-- Flying geometric birds -->
+  <polygon points="80,100 90,95 100,100 90,105" fill="#FFFFFF" opacity="0.7" />
+  <polygon points="300,80 310,75 320,80 310,85" fill="#FFFFFF" opacity="0.7" />
+</svg>

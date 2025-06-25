@@ -1,0 +1,45 @@
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFB6C1;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="mountain1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B7D6B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5D4E37;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="mountain2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#A0826D;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6B4423;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="mountain3" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#B8860B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8B4513;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Sky background -->
+  <rect width="400" height="400" fill="url(#skyGrad)" />
+  
+  <!-- Sun -->
+  <circle cx="320" cy="80" r="30" fill="#FFD700" opacity="0.9" />
+  
+  <!-- Back mountains -->
+  <polygon points="0,250 120,150 200,180 280,120 400,160 400,400 0,400" fill="url(#mountain1)" />
+  
+  <!-- Middle mountains -->
+  <polygon points="0,300 80,200 160,220 240,180 320,200 400,190 400,400 0,400" fill="url(#mountain2)" />
+  
+  <!-- Front mountains -->
+  <polygon points="0,350 60,280 140,300 220,260 300,280 400,270 400,400 0,400" fill="url(#mountain3)" />
+  
+  <!-- Trees (simple triangular shapes) -->
+  <polygon points="100,320 110,300 120,320" fill="#228B22" />
+  <polygon points="180,340 190,320 200,340" fill="#32CD32" />
+  <polygon points="260,330 270,310 280,330" fill="#228B22" />
+  <polygon points="340,350 350,330 360,350" fill="#32CD32" />
+  
+  <!-- Geometric overlay shapes for extra poly effect -->
+  <polygon points="150,200 170,180 190,200 170,220" fill="#DDA0DD" opacity="0.3" />
+  <polygon points="250,240 270,220 290,240 270,260" fill="#98FB98" opacity="0.3" />
+</svg>
